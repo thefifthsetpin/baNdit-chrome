@@ -1,0 +1,34 @@
+<fieldset id="ignore_{0}" class="half">
+	<legend>Attention/Ignore</legend>
+	<ol>
+		<li><input type="radio" id="ignore_{0}_0" name="ignore_{0}" value="0" /><label for="ignore_{0}_0">None</label></li>
+		<li><input type="radio" id="ignore_{0}_1" name="ignore_{0}" value="1" /><label for="ignore_{0}_1">Pay Attention</label></li>
+		<li><input type="radio" id="ignore_{0}_2" name="ignore_{0}" value="2" /><label for="ignore_{0}_2">Ignore User</label></li>
+		<li><input type="radio" id="ignore_{0}_3" name="ignore_{0}" value="3" /><label for="ignore_{0}_3">SuperIgnore User</label></li>
+	</ol>
+</fieldset>
+<fieldset id="ignoreReplies_{0}" class="half">
+	<legend>Ignore Replies</legend>
+	<ol>
+		<li><input type="radio" id="ignoreReplies_{0}_0" name="ignoreReplies_{0}" value="0" /><label for="ignoreReplies_{0}_0">Don't ignore replies to this user</label></li>
+		<li><input type="radio" id="ignoreReplies_{0}_1" name="ignoreReplies_{0}" value="1" /><label for="ignoreReplies_{0}_1">Ignore all replies to this user</label></li>
+		<li><input type="radio" id="ignoreReplies_{0}_2" name="ignoreReplies_{0}" value="2" /><label for="ignoreReplies_{0}_2">Ignore all replies to this user except those you're paying attention to</label></li>
+	</ol>
+</fieldset>
+<fieldset>
+	<legend>User Notes</legend>
+	<textarea id="notes_{0}" class="notes" rows="5"></textarea>
+</fieldset>
+<fieldset>
+	<legend>Colors</legend>
+	<ol>
+		<li>
+			<label for="fgColor_{0}">Foreground Color</label>
+			<input id="fgColor_{0}" type="text" class="color {required:false, pickerPosition:'right', hash:true}"></input>
+		</li>
+		<li>
+			<label for="bgColor_{0}">Background Color</label>
+			<input id="bgColor_{0}" type="text" class="color {required:false, pickerPosition:'right', hash:true}"></input>
+		</li>
+	</ol>
+</fieldset>

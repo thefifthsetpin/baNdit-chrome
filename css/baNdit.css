@@ -1,0 +1,100 @@
+/* Front-page story hider */
+div#ignoreStories {
+	float: left;
+	clear: both;
+	font-family: Tahoma, 'Lucida Grande', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif;
+	margin: 0.5em;
+	border: 2px solid #807373;
+	background-color: #eee;
+}
+div#ignoreStories table { border-collapse: collapse; }
+div#ignoreStories table tr { background-color: #eee; }
+div#ignoreStories table tr td.form {  
+		padding: 0.5em 1em 0.5em 0.5em;
+		background-color: #807373 !important;
+		color: #eee;
+}
+div#ignoreStories table tr td.currently_ignored {  
+		padding: 0.5em;
+		font-size: 85%;
+}
+div#ignoreStories table label { cursor: pointer; }
+div#ignoreStories table input[type="text"] { display: block; }
+
+a.baNdit_hiddenStory { padding-right: 0.5em; }
+
+/* User Options Dialog */
+.baNdit_userDialog { font-size: 80%; }
+.baNdit_userDialog fieldset { margin-top: 0 !important; margin-bottom: 0 !important; }
+.baNdit_userDialog fieldset.half { width: 45%; float; left; }
+.baNdit_userDialog textarea.notes { width: 100%; }
+.baNdit_userDialog li { list-style: none; margin: 0 1em 0 0;}
+.baNdit_userDialog li input[type="radio"]{ margin: 0 0.5em 0 0;}
+
+/* HTML Tag Dialog */
+#baNdit_HTMLTagDialog table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#baNdit_HTMLTagDialog td { 
+	padding: 0.5em;
+	background-color: inherit !important;
+}
+	
+#baNdit_HTMLTagDialog td.label {
+	width: 15%;
+	text-align: right;
+}
+
+#baNdit_HTMLTagDialog td.input {
+	width: 85%;
+}
+
+#baNdit_HTMLTagDialog td input {
+	width: 90%;
+}
+
+/* IMG Tag Dialog */
+#baNdit_IMGTagDialog table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#baNdit_IMGTagDialog td { 
+	padding: 0.5em;
+	background-color: inherit !important;
+}
+	
+#baNdit_IMGTagDialog td.label {
+	width: 15%;
+	text-align: right;
+}
+
+#baNdit_IMGTagDialog td.input {
+	width: 85%;
+}
+
+#baNdit_IMGTagDialog td input {
+	width: 90%;
+}
+
+/* Comments styles */
+span.attention, span.baNdit_hide, span.baNdit_awesome{
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+}
+
+span.baNdit_hide {
+	padding: 0.1em 0.5em 0 0;
+}
+
+span.attention img, span.baNdit_hide img, span.baNdit_awesome img{
+	border: none; 
+}
+
+hr.baNdit_superIgnore {
+	height: 5px;
+}
