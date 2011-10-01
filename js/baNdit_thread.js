@@ -220,11 +220,12 @@ function PreProcessCommentsPage() {
 		
 		var username = commentHeader.children("span.ui:first").text();
 
-    // this shenanignans inserts nabbit icon links.
-    // TODO: move into global extension settings, to even do this?
-    var userIDSpan = commentHeader.children(".uid");
-    var timeSpan = commentHeader.children(".time");
-    InjectNabbitLinks(userIDSpan.text(), userIDSpan, timeSpan);
+    if(GetPref('nabbit_enabled')) {
+        // this shenanignans inserts nabbit icon links.
+        var userIDSpan = commentHeader.children(".uid");
+        var timeSpan = commentHeader.children(".time");
+        InjectNabbitLinks(userIDSpan.text(), userIDSpan, timeSpan);
+    }
 
 		ThreadPosters.push(username);
 		
@@ -521,22 +522,22 @@ function SuperIgnoreUser(username) {
 function IgnoreUsers(userOptions) {
 	var ignore = parseInt(userOptions.ignore) || BanditIgnoreType.NONE;
   var username = MakeUsernameSelectorSafe(userOptions.userName);	
+	var ignoreReplyType = parseInt(userOptions.ignoreReplies) || BanditIgnoreReplyType.NONE;
 	switch(ignore) {
 		case BanditIgnoreType.IGNORE_USER:
 			IgnoreUser(username);
-			IgnoreReplies(username);
+			IgnoreReplies(username, ignoreReplyType);
 			break;
 		case BanditIgnoreType.SUPERIGNORE_USER:
 			SuperIgnoreUser(username);
-			IgnoreReplies(username);
+			IgnoreReplies(username, ignoreReplyType);
 			break;
 	}
 }
 
-function IgnoreReplies(username) {
-	var ignoreReplies = parseInt(userOptions.ignoreReplies) || BanditIgnoreReplyType.NONE;
+function IgnoreReplies(username, ignoreReplyType) {
 	
-	switch(ignoreReplies) {
+	switch(ignoreReplyType) {
 		case BanditIgnoreReplyType.NONE:
 			break;
 		case BanditIgnoreReplyType.ALL:
@@ -731,6 +732,21 @@ function MakeUsernameSelectorSafe(name) {
   return name.replace(/'/g, '\\\'');
 }
 
+function GetNabbitSettingDiv() {
+  return '<div id="nabbit_setting">Use naBBit icons: <input type="checkbox" id="nabbit_enabled" name="nabbit"/></div>';
+}
+
+function PlaceNabbitSetting() {
+  var nabbitSetting = GetNabbitSettingDiv();
+  $('#comment_warning').after(nabbitSetting);
+  if(GetPref('nabbit_enabled', 'true')) {
+    $('#nabbit_enabled').attr('checked', 'checked');
+  }
+  $('#nabbit_enabled').change( function () {
+      SetPref('nabbit_enabled', $(this).attr('checked'));
+    });
+}
+
 function HTMLToolbar_AddLink() { 
 	GetHTMLTagDialog().dialog("open");
 }
@@ -847,7 +863,7 @@ function baNdit_main() {
 	AddHTMLToolbar();
 	
 	SetupPasteHandler();
-	
+	PlaceNabbitSetting();
 	CreateUserOptionsDialogs();
 }
 
