@@ -11,6 +11,8 @@ const BanditIgnoreReplyType = {
     NON_ATTENTION : 2,
 };
 
+const WebmonkeesURL = "http://webmonkees.com/naBBits/";
+
 function GetDefaultUserOptions(username) {
 	return {
 		userName: username || "",
@@ -218,6 +220,13 @@ function PreProcessCommentsPage() {
 		
 		var username = commentHeader.children("span.ui:first").text();
 
+    if(GetPref('nabbit_enabled')) {
+        // this shenanignans inserts nabbit icon links.
+        var userIDSpan = commentHeader.children(".uid");
+        var timeSpan = commentHeader.children(".time");
+        InjectNabbitLinks(userIDSpan.text(), userIDSpan, timeSpan);
+    }
+
 		ThreadPosters.push(username);
 		
 		commentHeader.attr("username", username);
@@ -229,6 +238,13 @@ function PreProcessCommentsPage() {
 	ThreadPosters = baNdit_unique(ThreadPosters);
 }
 
+function InjectNabbitLinks(userID, userIDSpan, timestampSpan) {
+   userIDSpan.html("<img src=\"{0}{1}.gif\" width=58 height=18 alt=({1}) title=({1}) onerror=\"this.onerror=null;this.src='http://cdn.bannination.net/172/img/blank.gif'\">".format(WebmonkeesURL, userID));
+   if(userID != 0) {
+      timestampSpan.html(timestampSpan.html() + "<a href={0}0/notes.htm#{1}><img src=\"{0}m{1}.png\" width=180 height=18 align=top id=({1}) title=\"{1}\" border=0 onerror=\"this.onerror=null;this.src='http://cdn.bannination.net/172/img/blank.gif'\"></a>".format(WebmonkeesURL, userID));
+   }
+}
+
 function ForEachPoster(fn) {
 	// fn must take a userOptions object as it's one parameter
 	if(!fn || !ThreadPosters || ThreadPosters.length == 0) return;
@@ -236,7 +252,7 @@ function ForEachPoster(fn) {
 	$.each(ThreadPosters, function() {
 		var userOptions = GetUserOptions(this);
 
-		if(!userOptions) continue;
+		if(!userOptions) return;
 		
 		fn(userOptions); 
 	});	
@@ -245,7 +261,11 @@ function ForEachPoster(fn) {
 function InitializeUserNotes() {
 	ForEachPoster(SetUserNotes);
 }
+
 function ClearUserNotes(username) { 
+  // handle usernames with single quotes
+  username = MakeUsernameSelectorSafe(username);
+
 	$("div.ch[username='{0}'] span.ui a abbr".format(username)).each(function(){
 		var node = $(this);
 		var text = node.text();
@@ -257,8 +277,9 @@ function SetUserNotes(userOptions) {
 	if(!userOptions) return;
 	
 	var needsUserNotes = stringNotEmpty(userOptions.notes);
+  var username = MakeUsernameSelectorSafe(userOptions.userName);
 
-	ClearUserNotes(userOptions.userName);
+	ClearUserNotes(username);
 
 	if(!needsUserNotes) return;
 
@@ -271,7 +292,7 @@ function SetUserNotes(userOptions) {
 	
 	var abbrContent = fakeDiv.html();
 	
-	$("div.ch[username='{0}'] span.ui a".format(userOptions.userName))
+	$("div.ch[username='{0}'] span.ui a".format(username))
 		.each(function() {
 			$(this)
 				.css("text-decoration", "none")
@@ -291,10 +312,10 @@ function ClearUserColors(username) {
 
 function SetUserColors(userOptions) {
 	if(!userOptions) return;
-	
-	ClearUserColors(userOptions.userName);
+	username = MakeUsernameSelectorSafe(userOptions.userName);
 
-	$("div.ch[username='{0}']".format(userOptions.userName))
+	ClearUserColors(username);
+  	$("div.ch[username='{0}']".format(username))
 		.each(function() {
 			$(this)
 				.css("background-color", userOptions.bgColor || null)
@@ -308,13 +329,13 @@ function SetUserColors(userOptions) {
 
 function PayAttentionToUser(userOptions) {
 	if(!userOptions) return;
-	
-	UnmarkUserToPayAttention(userOptions.userName);
+  username = MakeUsernameSelectorSafe(userOptions.userName);	
+	UnmarkUserToPayAttention(username);
 	
 	var ignore = parseInt(userOptions.ignore) || BanditIgnoreType.NONE;
 	
 	if(ignore == BanditIgnoreType.PAY_ATTENTION) {
-		MarkUserToPayAttention(userOptions.userName);
+		MarkUserToPayAttention(username);
 	}
 }
 
@@ -328,7 +349,7 @@ function InitializeIgnoredUsers() {
 }
 
 function RedisplayUser(userOptions) {
-	var username = userOptions.userName;
+	var username = MakeUsernameSelectorSafe(userOptions.userName);
 	$("div.ch[username='{0}'],div.cb[username='{0}']".format(username)).show();
 	$("div.ch[username='{0}'] span.baNdit_hide".format(username)).remove();
 	$("hr.baNdit_superIgnore[username='{0}']".format(username)).remove();
@@ -500,30 +521,30 @@ function SuperIgnoreUser(username) {
 // TODO: Add "Ignored users in this thread" to toolbar button
 function IgnoreUsers(userOptions) {
 	var ignore = parseInt(userOptions.ignore) || BanditIgnoreType.NONE;
-	
+  var username = MakeUsernameSelectorSafe(userOptions.userName);	
+	var ignoreReplyType = parseInt(userOptions.ignoreReplies) || BanditIgnoreReplyType.NONE;
 	switch(ignore) {
 		case BanditIgnoreType.IGNORE_USER:
-			IgnoreUser(userOptions.userName);
-			IgnoreReplies(userOptions);
+			IgnoreUser(username);
+			IgnoreReplies(username, ignoreReplyType);
 			break;
 		case BanditIgnoreType.SUPERIGNORE_USER:
-			SuperIgnoreUser(userOptions.userName);
-			IgnoreReplies(userOptions);
+			SuperIgnoreUser(username);
+			IgnoreReplies(username, ignoreReplyType);
 			break;
 	}
 }
 
-function IgnoreReplies(userOptions) {
-	var ignoreReplies = parseInt(userOptions.ignoreReplies) || BanditIgnoreReplyType.NONE;
+function IgnoreReplies(username, ignoreReplyType) {
 	
-	switch(ignoreReplies) {
+	switch(ignoreReplyType) {
 		case BanditIgnoreReplyType.NONE:
 			break;
 		case BanditIgnoreReplyType.ALL:
-			IgnoreAllRepliesTo(userOptions.userName);
+			IgnoreAllRepliesTo(username);
 			break;
 		case BanditIgnoreReplyType.NON_ATTENTION:
-			IgnoreAllNonAttentionRepliesTo(userOptions.userName);
+			IgnoreAllNonAttentionRepliesTo(username);
 			break;
 	}
 }
@@ -707,6 +728,25 @@ function GetIMGTagDialog() {
 	return tagDialog;
 }
 
+function MakeUsernameSelectorSafe(name) {
+  return name.replace(/'/g, '\\\'');
+}
+
+function GetNabbitSettingDiv() {
+  return '<div id="nabbit_setting">Use naBBit icons: <input type="checkbox" id="nabbit_enabled" name="nabbit"/></div>';
+}
+
+function PlaceNabbitSetting() {
+  var nabbitSetting = GetNabbitSettingDiv();
+  $('#comment_warning').after(nabbitSetting);
+  if(GetPref('nabbit_enabled', 'true')) {
+    $('#nabbit_enabled').attr('checked', 'checked');
+  }
+  $('#nabbit_enabled').change( function () {
+      SetPref('nabbit_enabled', $(this).attr('checked'));
+    });
+}
+
 function HTMLToolbar_AddLink() { 
 	GetHTMLTagDialog().dialog("open");
 }
@@ -820,11 +860,10 @@ function baNdit_main() {
 	InitializePaidAttentionUsers();
 	InitializeIgnoredUsers();
 	MarkPostsAboveCoolScore();
-	
 	AddHTMLToolbar();
 	
 	SetupPasteHandler();
-	
+	PlaceNabbitSetting();
 	CreateUserOptionsDialogs();
 }
 
