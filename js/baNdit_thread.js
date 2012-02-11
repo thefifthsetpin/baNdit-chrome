@@ -263,8 +263,6 @@ function InitializeUserNotes() {
 }
 
 function ClearUserNotes(username) { 
-  // handle usernames with single quotes
-  username = MakeUsernameSelectorSafe(username);
 
 	$("div.ch[username='{0}'] span.ui a abbr".format(username)).each(function(){
 		var node = $(this);
