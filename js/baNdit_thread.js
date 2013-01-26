@@ -241,7 +241,7 @@ function PreProcessCommentsPage() {
 function InjectNabbitLinks(userID, userIDSpan, timestampSpan) {
    userIDSpan.html("<img src=\"{0}{1}.gif\" width=58 height=18 alt=({1}) title=({1}) onerror=\"this.onerror=null;this.src='http://cdn.bannination.net/172/img/blank.gif'\">".format(WebmonkeesURL, userID));
    if(userID != 0) {
-      timestampSpan.html(timestampSpan.html() + "<a href={0}0/notes.htm#{1}><img src=\"{0}m{1}.png\" width=180 height=18 align=top id=({1}) title=\"{1}\" border=0 onerror=\"this.onerror=null;this.src='http://cdn.bannination.net/172/img/blank.gif'\"></a>".format(WebmonkeesURL, userID));
+      timestampSpan.html(timestampSpan.html() + "&nbsp;<a href={0}0/notes.htm#{1}><img src=\"{0}m{1}.png\" width=180 height=18 align=top id=({1}) title=\"{1}\" border=0 onerror=\"this.onerror=null;this.src='http://cdn.bannination.net/172/img/blank.gif'\"></a>".format(WebmonkeesURL, userID));
    }
 }
 
