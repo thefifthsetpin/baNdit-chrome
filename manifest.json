@@ -18,7 +18,10 @@
       "img/link_add.png",
       "img/text_bold.png",
       "img/text_italic.png",
-      "img/text_strikethrough.png"
+      "img/text_strikethrough.png",
+      "js/jscolor/hs.png",
+      "js/jscolor/cross.gif",
+      "js/jscolor/arrow.gif"
   ],
 	"content_scripts": [
 		{
