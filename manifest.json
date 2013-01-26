@@ -1,14 +1,25 @@
 {
-	"format_version": 1,
-	"id": "pfgbbbmdpkplfgcfgjofjflincclpghf",
 	"name": "baNdit",
-	"version": "2.0",
-	"description": "Various tools to make banniNation nicer.",
-	"background_page": "html/background.html",
+	"version": "2.1",
+	"manifest_version": 2,
+  "description": "Various tools to make banniNation nicer.",
+	"background": "html/background.html",
 	"permissions": [
-		"http://*/*",
-		"https://*/*"
+		"http://*.bannination.com/*",
+		"http://webmonkees.com/*",
+		"https://*.bannination.com/*"
 	],
+  "web_accessible_resources": [
+      "img/bullet_green.png",
+      "img/bullet_star.png",
+      "img/icon.png",
+      "img/icon_eyeball.png",
+      "img/image_add.png",
+      "img/link_add.png",
+      "img/text_bold.png",
+      "img/text_italic.png",
+      "img/text_strikethrough.png"
+  ],
 	"content_scripts": [
 		{
 			"matches": ["http://*.bannination.com/comments/*"],
