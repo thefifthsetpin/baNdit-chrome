@@ -737,7 +737,7 @@ function GetNabbitSettingDiv() {
 function PlaceNabbitSetting() {
   var nabbitSetting = GetNabbitSettingDiv();
   $('#comment_warning').after(nabbitSetting);
-  if(GetPref('nabbit_enabled', 'true')) {
+  if(GetPref('nabbit_enabled', false)) {
     $('#nabbit_enabled').attr('checked', 'checked');
   }
   $('#nabbit_enabled').change( function () {
